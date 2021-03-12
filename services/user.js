@@ -1,16 +1,17 @@
+const User = require("../db/model/user");
 const UserModel = require("../db/model/user");
-const convertObjectID = require("mongoose").Types.ObjectId;
 
 module.exports = {
   name: "user",
   val: {
-    create: (userData) => {
-      const user = new UserModel({
-        ...userData,
-      });
+    create: async (email) => {
+      return new Promise(async (resolve, reject) => {
+        let user = await UserModel.findOne({ email });
 
-      user.save(function (err, result) {
-        console.log(err, result);
+        if (!user)
+          user = await UserModel.create({ email }).catch((e) => reject(e));
+
+        resolve(user);
       });
     },
   },

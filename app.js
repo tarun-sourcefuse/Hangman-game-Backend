@@ -2,6 +2,12 @@ const express = require("express");
 const app = express();
 const path = require("path");
 
+//response fn
+const { createResponse } = require("./utils/miscllaneous");
+const {
+  STATUS_CODE: { ERROR },
+} = require("./constants");
+
 // API documentation
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
@@ -17,6 +23,7 @@ require("./bootloader/index")();
 require("./utils/expressGroup");
 
 const indexRouter = require("./routes/index");
+const { create } = require("./db/model/game");
 app.use("/", indexRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -29,8 +36,8 @@ app.use(function (req, res, next) {
 // error handler
 app.use(function (err, req, res, next) {
   console.log(err);
-  res.status(err.status || 500);
-  res.send({ error: err.message || err });
+  res.status(err.status || ERROR);
+  res.send(createResponse(err.message || err, null, true));
 });
 
 const port = process.env.PORT || "3000";
