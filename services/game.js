@@ -10,13 +10,18 @@ module.exports = {
           .makeGetCall(RANDOM_WORD_API)
           .then(async (res) => {
             let gameSession = null;
-            const { word, definition: hint } = res || {};
+            let { word, definition: hint } = res || {};
 
+            word = word.toLowerCase();
+            const correctWords = [word[0], word[word.length - 1]];
             if (!word || !hint) reject("Something went wrong");
 
-            gameSession = await GameModel.create({ word, hint }).catch((e) =>
-              reject(e)
-            );
+            gameSession = await GameModel.create({
+              word,
+              hint,
+              correctWords,
+              guessWords: correctWords,
+            }).catch((e) => reject(e));
 
             resolve(gameSession);
           })

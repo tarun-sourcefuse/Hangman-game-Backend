@@ -7,6 +7,7 @@ const login = async (req, res, next) => {
   });
 
   const { error, value } = schema.validate(req.query);
+  console.log(error);
   if (error) {
     next("Invalid data");
   } else {

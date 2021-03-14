@@ -2,6 +2,7 @@ const Joi = require("@hapi/joi");
 const { createResponse } = require("../utils/miscllaneous");
 const GameModel = require("../db/model/game");
 const ObjectId = require("mongoose").Types.ObjectId;
+const { hideCharacters } = require("../utils/miscllaneous");
 
 const startGame = async (req, res, next) => {
   if (req.user && req.user.currentGame) {
@@ -9,7 +10,21 @@ const startGame = async (req, res, next) => {
       { _id: req.user.currentGame },
       { _id: 0, __v: 0 }
     );
-    return res.send(createResponse(null, gameData, null));
+
+    const { word, hint, correctWords, guessWords, attempts } = gameData;
+    return res.send(
+      createResponse(
+        null,
+        {
+          hint,
+          correctWords,
+          guessWords,
+          attempts,
+          word: hideCharacters(word, correctWords),
+        },
+        null
+      )
+    );
   }
 
   services.game
@@ -19,13 +34,16 @@ const startGame = async (req, res, next) => {
       req.user.currentGame = gameData._id;
       req.user.save();
 
+      const { word, correctWords, hint, guessWords, attempts } = gameData;
       res.send(
         createResponse(
           null,
           {
-            word: gameData.word,
-            hint: gameData.hint,
-            attempts: gameData.attempts,
+            word: hideCharacters(word, correctWords),
+            hint: hint,
+            attempts: attempts,
+            correctWords: correctWords,
+            guessWords: guessWords,
           },
           null
         )
@@ -79,8 +97,16 @@ const guessWord = async (req, res, next) => {
 
     if (word.toLowerCase().includes(character)) isCorrect = true;
 
-    isCorrect && correctWords.push(character);
+    if (isCorrect) {
+      const matchPattern = new RegExp(character, "g");
+      const matchCount = word.match(matchPattern).length;
 
+      correctWords = [
+        ...new Array(matchCount).fill(character),
+        ...correctWords,
+      ];
+    }
+    console.log(correctWords);
     // if not correct decrease attempt
     !isCorrect && attempts--;
 
@@ -110,7 +136,7 @@ const guessWord = async (req, res, next) => {
         msg,
         {
           hint,
-          word,
+          word: hideCharacters(word),
           correctWords,
           guessWords,
           isCorrect,
