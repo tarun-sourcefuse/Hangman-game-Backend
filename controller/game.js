@@ -136,7 +136,7 @@ const guessWord = async (req, res, next) => {
         msg,
         {
           hint,
-          word: hideCharacters(word),
+          word: hideCharacters(word, correctWords),
           correctWords,
           guessWords,
           isCorrect,

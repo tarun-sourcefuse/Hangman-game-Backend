@@ -5,48 +5,26 @@
         "version": "1.0.0",
         "title": "Hangman Game"
     },
-    "host": "http://localhost:3011",
+    "host": "localhost:3011",
     "basePath": "/api",
     "schemes": [
         "http"
     ],
     "paths": {
-        "/pet/{petId}/uploadImage": {
-            "post": {
-                "tags": [
-                    "pet"
-                ],
-                "summary": "uploads an image",
-                "description": "",
-                "operationId": "uploadFile",
-                "consumes": [
-                    "multipart/form-data"
-                ],
+        "/login": {
+            "get": {
+                "summary": "Login using email",
+                "description": "Login using email",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
-                        "name": "petId",
-                        "in": "path",
-                        "description": "ID of pet to update",
+                        "name": "email",
+                        "in": "query",
+                        "description": "Used for email login",
                         "required": true,
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    {
-                        "name": "additionalMetadata",
-                        "in": "formData",
-                        "description": "Additional data to pass to server",
-                        "required": false,
                         "type": "string"
-                    },
-                    {
-                        "name": "file",
-                        "in": "formData",
-                        "description": "file to upload",
-                        "required": false,
-                        "type": "file"
                     }
                 ],
                 "responses": {
@@ -56,15 +34,64 @@
                             "$ref": "#/definitions/ApiResponse"
                         }
                     }
-                },
-                "security": [
+                }
+            }
+        },
+        "/startGame": {
+            "get": {
+                "summary": "Start game session",
+                "description": "Start game session",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
                     {
-                        "petstore_auth": [
-                            "write:pets",
-                            "read:pets"
-                        ]
+                        "name": "email",
+                        "in": "query",
+                        "description": "Used for email login",
+                        "required": true,
+                        "type": "string"
                     }
-                ]
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/guessWord": {
+            "get": {
+                "summary": "Guess word",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Used for email login",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "character",
+                        "in": "query",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
             }
         }
     },
