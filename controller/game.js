@@ -106,7 +106,7 @@ const guessWord = async (req, res, next) => {
         ...correctWords,
       ];
     }
-    console.log(correctWords);
+
     // if not correct decrease attempt
     !isCorrect && attempts--;
 

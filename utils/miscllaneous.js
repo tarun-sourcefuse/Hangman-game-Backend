@@ -10,7 +10,6 @@ const createResponse = (msg, data, error) => {
 };
 
 const hideCharacters = (word, matched) => {
-  console.log(matched);
   return word
     .split("")
     .reduce(

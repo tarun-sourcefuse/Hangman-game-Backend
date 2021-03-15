@@ -29,10 +29,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
+                        "success": true,
+                        "description": "Email registered"
+                    },
+                    "500": {
+                        "error": true,
+                        "msg": "Invalid email",
+                        "description": "Email validation failed"
                     }
                 }
             }
@@ -55,10 +58,23 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
+                        "data": {
+                            "word": "string",
+                            "attempts": "integer",
+                            "correctWords": "array",
+                            "guessWords": "array"
+                        },
+                        "description": "Game session start"
+                    },
+                    "500": {
+                        "error": true,
+                        "msg": "Invalid game session.",
+                        "description": "Webservice issue"
+                    },
+                    "400": {
+                        "error": true,
+                        "msg": "Invalid email.",
+                        "description": "Email not registered"
                     }
                 }
             }
@@ -86,28 +102,20 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
+                        "data": {
+                            "word": "string",
+                            "attempts": "integer",
+                            "correctWords": "array",
+                            "guessWords": "array"
+                        },
+                        "description": "Character added and parsed"
+                    },
+                    "500": {
+                        "error": true,
+                        "msg": "Word cannot be repeated.",
+                        "description": "Word cannot be repeated."
                     }
                 }
-            }
-        }
-    },
-    "securityDefinitions": {
-        "api_key": {
-            "type": "apiKey",
-            "name": "api_key",
-            "in": "header"
-        },
-        "petstore_auth": {
-            "type": "oauth2",
-            "authorizationUrl": "https://petstore.swagger.io/oauth/authorize",
-            "flow": "implicit",
-            "scopes": {
-                "read:pets": "read your pets",
-                "write:pets": "modify pets in your account"
             }
         }
     },
@@ -115,14 +123,16 @@
         "ApiResponse": {
             "type": "object",
             "properties": {
-                "code": {
-                    "type": "integer",
-                    "format": "int32"
+                "data": {
+                    "type": "object"
                 },
-                "type": {
+                "success": {
+                    "type": "boolean"
+                },
+                "msg": {
                     "type": "string"
                 },
-                "message": {
+                "error": {
                     "type": "string"
                 }
             }
@@ -130,32 +140,46 @@
         "User": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "username": {
-                    "type": "string"
-                },
-                "firstName": {
-                    "type": "string"
-                },
-                "lastName": {
+                "_id": {
                     "type": "string"
                 },
                 "email": {
                     "type": "string"
                 },
-                "password": {
+                "currentGame": {
+                    "type": "string",
+                    "description": "Refrence to game table"
+                }
+            },
+            "xml": {
+                "name": "User"
+            }
+        },
+        "Game": {
+            "type": "object",
+            "properties": {
+                "_id": {
                     "type": "string"
                 },
-                "phone": {
-                    "type": "string"
+                "word": {
+                    "type": "string",
+                    "description": "Word to be guessed"
                 },
-                "userStatus": {
+                "hint": {
+                    "type": "string",
+                    "description": "Hint for word"
+                },
+                "correctWords": {
+                    "type": "array",
+                    "description": "Array of correct characters guessed"
+                },
+                "guessWords": {
+                    "type": "array",
+                    "description": "Array of characters guessed"
+                },
+                "attempts": {
                     "type": "integer",
-                    "format": "int32",
-                    "description": "User Status"
+                    "description": "Number of attemps(Max limit is 6)"
                 }
             },
             "xml": {
