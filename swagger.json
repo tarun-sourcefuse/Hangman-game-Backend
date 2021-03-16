@@ -40,7 +40,7 @@
                 }
             }
         },
-        "/startGame": {
+        "/start-game": {
             "get": {
                 "summary": "Start game session",
                 "description": "Start game session",
@@ -79,7 +79,7 @@
                 }
             }
         },
-        "/guessWord": {
+        "/guess-word": {
             "get": {
                 "summary": "Guess word",
                 "produces": [

@@ -11,8 +11,16 @@ const gameController = require("../controller/game");
 //api routes
 router.group("/api", (app) => {
   app.get("/login", userController.login);
-  app.get("/startGame", authMiddleware.loginValidate, gameController.startGame);
-  app.get("/guessWord", authMiddleware.loginValidate, gameController.guessWord);
+  app.get(
+    "/start-game",
+    authMiddleware.loginValidate,
+    gameController.startGame
+  );
+  app.get(
+    "/guess-word",
+    authMiddleware.loginValidate,
+    gameController.guessWord
+  );
 });
 
 //React dashboard view route
