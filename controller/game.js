@@ -5,7 +5,12 @@ const ObjectId = require("mongoose").Types.ObjectId;
 const { hideCharacters } = require("../utils/miscllaneous");
 
 const startGame = async (req, res, next) => {
-  if (req.user && req.user.currentGame && req.currentGame.attempts > 0) {
+  if (
+    req.user &&
+    req.user.currentGame &&
+    req.user.currentGame.attempts &&
+    req.user.currentGame.attempts > 0
+  ) {
     const gameData = await GameModel.findOne(
       { _id: req.user.currentGame },
       { _id: 0, __v: 0 }
