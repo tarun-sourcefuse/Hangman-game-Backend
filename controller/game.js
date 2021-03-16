@@ -118,7 +118,7 @@ const guessWord = async (req, res, next) => {
     guessWords.push(character);
 
     if (attempts === 0) {
-      msg = "You loss";
+      msg = "You lose";
       gameOver = true;
     }
     if (correctWords.length === word.length) {
